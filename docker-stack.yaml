@@ -7,8 +7,8 @@ services:
       - youtube-api-key
     environment:
       - API_URL=https://linkconvert.emilpopovic.me
-      - SPOTIFY_TOKEN_FILE=/run/secrets/spotify-client-id
       - SPOTIFY_CLIENT_ID_FILE=/run/secrets/spotify-client-id
+      - SPOTIFY_CLIENT_SECRET_FILE=/run/secrets/spotify-client-secret
       - YOUTUBE_API_KEY_FILE=/run/secrets/youtube-api-key
     depends_on:
       - redis
