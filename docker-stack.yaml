@@ -5,6 +5,8 @@ services:
       - spotify-client-id
       - spotify-client-secret
       - youtube-api-key
+    ports:
+      - "5555:5555"
     environment:
       - API_URL=https://linkconvert.emilpopovic.me
       - SPOTIFY_CLIENT_ID_FILE=/run/secrets/spotify-client-id
