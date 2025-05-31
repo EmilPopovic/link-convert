@@ -1,6 +1,6 @@
 services:
   api:
-    image: emilpopovic/linkconvert:${GIT_COMMIT_HASH:-latest}
+    image: emilpopovic/linkconvert:latest
     secrets:
       - spotify-client-id
       - spotify-client-secret
