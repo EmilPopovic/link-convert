@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Web App</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Music Link Converter</title>
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="static/style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to My Simple Web App</h1>
-        <p>This is a basic web application with HTML, CSS, and JavaScript.</p>
-        <button id="clickMeButton">Click Me!</button>
-        <p id="message"></p>
-    </div>
+  <div class="container">
+    <h1>Music Link Converter</h1>
+    <input
+      type="text"
+      id="urlInput"
+      placeholder="Enter YouTube Music or Spotify track URL"
+    />
+    <button id="convertBtn">Convert</button>
+    <div id="output"></div>
+  </div>
+
+  <!-- Link to external JS -->
+  <script src="static/script.js"></script>
 </body>
+</html>
