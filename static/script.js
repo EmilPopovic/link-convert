@@ -1,150 +1,117 @@
-const urlInput = document.getElementById('urlInput');
-const convertBtn = document.getElementById('convertBtn');
-const outputDiv = document.getElementById('output');
-const spinner = document.getElementById('spinner');
+document.addEventListener('DOMContentLoaded', () => {
+    const urlInput = document.getElementById('url-input');
+    const convertButton = document.getElementById('convert-button');
+    const spinner = document.getElementById('spinner');
+    const resultContainer = document.getElementById('result-container');
+    const resultUrlElement = document.getElementById('result-url');
+    const copyButton = document.getElementById('copy-button');
+    const copyFeedback = document.getElementById('copy-feedback');
+    const errorMessageElement = document.getElementById('error-message');
 
-// If your backend runs at a different host/port, set it here, e.g.:
-// const API_BASE = 'https://api.yourdomain.com/v1';
-const API_BASE = '';
-
-function determineDirection(url) {
-  const lower = url.toLowerCase();
-  if (lower.includes('spotify.com/track/')) {
-    return 'spotify-to-youtube';
-  }
-  if (lower.includes('youtube.com/watch') || lower.includes('music.youtube.com/watch')) {
-    return 'youtube-to-spotify';
-  }
-  return null;
-}
-
-function showSpinner() {
-  spinner.style.display = 'block';
-}
-function hideSpinner() {
-  spinner.style.display = 'none';
-}
-
-async function convert() {
-  const rawUrl = urlInput.value.trim();
-  outputDiv.innerHTML = '';
-  const direction = determineDirection(rawUrl);
-
-  if (!rawUrl) {
-    showError('Please enter a track URL.');
-    return;
-  }
-  if (!direction) {
-    showError('Unsupported URL. Paste a valid Spotify or YouTube Music link.');
-    return;
-  }
-
-  const endpoint = `/convert/${direction}`;
-  const payloadKey = direction === 'spotify-to-youtube' ? 'spotify_url' : 'youtube_url';
-  const payload = { [payloadKey]: rawUrl };
-
-  showSpinner();
-  try {
-    const res = await fetch(API_BASE + endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+    convertButton.addEventListener('click', handleSubmit);
+    urlInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            handleSubmit();
+        }
     });
+    copyButton.addEventListener('click', copyToClipboard);
 
-    if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.detail || 'Conversion failed.');
+    function showSpinner() {
+        spinner.style.display = 'block';
     }
 
-    const data = await res.json();
-    const converted = direction === 'spotify-to-youtube' ? data.youtube_music_url : data.spotify_url;
-    showResult(converted);
-  } catch (err) {
-    showError(err.message);
-  } finally {
-    hideSpinner();
-  }
-}
+    function hideSpinner() {
+        spinner.style.display = 'none';
+    }
 
-function showResult(convertedUrl) {
-  // Clear previous output
-  outputDiv.innerHTML = '';
+    function displayResult(url) {
+        resultUrlElement.href = url;
+        resultUrlElement.textContent = url;
+        resultContainer.style.display = 'block';
+        errorMessageElement.style.display = 'none';
+        copyFeedback.textContent = ''; // Clear previous feedback
+    }
 
-  // Create container
-  const container = document.createElement('div');
-  container.classList.add('result-container');
+    function displayError(message) {
+        errorMessageElement.textContent = message;
+        errorMessageElement.style.display = 'block';
+        resultContainer.style.display = 'none';
+    }
 
-  // Create link element
-  const link = document.createElement('a');
-  link.href = convertedUrl;
-  link.target = '_blank';
-  link.textContent = convertedUrl;
+    async function handleSubmit() {
+        const inputValue = urlInput.value.trim();
+        if (!inputValue) {
+            displayError('Please enter a URL.');
+            return;
+        }
 
-  // Create copy‐icon button
-  const copyBtn = document.createElement('button');
-  copyBtn.classList.add('copy-icon');
-  copyBtn.innerHTML = `
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      fill="currentColor"
-      viewBox="0 0 16 16"
-    >
-      <path
-        d="M10 1.5H4A1.5 1.5 0 0 0 2.5 3v9A1.5
-           1.5 0 0 0 4 13.5h6A1.5 1.5 0 0 0 11.5
-           12V3A1.5 1.5 0 0 0 10 1.5zM4 2h6A1 1 0 0
-           1 11 3v1H3V3a1 1 0 0 1 1-1zm6 11H4a1 1 0 0
-           1-1-1V5h8v7a1 1 0 0 1-1 1z"
-      />
-      <path
-        d="M8 4.5a.5.5 0 0 1 .5.5v6.793l1.146-1.147a
-           .5.5 0 1 1 .708.708l-2 2a.498.498 0 0
-           1-.708 0l-2-2a.5.5 0 1 1 .708-.708L
-           7.5 11.793V5a.5.5 0 0 1 .5-.5z"
-      />
-    </svg>
-  `;
+        showSpinner();
+        resultContainer.style.display = 'none';
+        errorMessageElement.style.display = 'none';
+        copyFeedback.textContent = '';
 
-  // Create “Copied!” tooltip span
-  const tooltip = document.createElement('span');
-  tooltip.classList.add('tooltip');
-  tooltip.textContent = 'Copied!';
+        let apiUrl;
+        let requestBody;
 
-  // Copy to clipboard on click
-  copyBtn.addEventListener('click', () => {
-    navigator.clipboard
-      .writeText(convertedUrl)
-      .then(() => {
-        tooltip.classList.add('visible');
-        setTimeout(() => tooltip.classList.remove('visible'), 1400);
-      })
-      .catch(() => {
-        tooltip.textContent = 'Failed to copy';
-        tooltip.classList.add('visible');
-        setTimeout(() => {
-          tooltip.classList.remove('visible');
-          tooltip.textContent = 'Copied!';
-        }, 1400);
-      });
-  });
+        if (inputValue.includes('spotify.com')) {
+            apiUrl = '/convert/spotify-to-youtube';
+            requestBody = { spotify_url: inputValue };
+        } else if (inputValue.includes('youtube.com') || inputValue.includes('youtu.be')) {
+            apiUrl = '/convert/youtube-to-spotify';
+            requestBody = { youtube_url: inputValue };
+        } else {
+            hideSpinner();
+            displayError('Invalid URL. Please use a Spotify or YouTube link.');
+            return;
+        }
 
-  // Append link, copy‐icon, and tooltip
-  container.appendChild(link);
-  container.appendChild(copyBtn);
-  container.appendChild(tooltip);
-  outputDiv.appendChild(container);
-}
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            });
 
-function showError(msg) {
-  outputDiv.innerHTML = `<div class="error">${msg}</div>`;
-}
+            const data = await response.json();
 
-/* === Listeners === */
-convertBtn.addEventListener('click', convert);
-urlInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    convert();
-  }
+            if (response.ok) {
+                const convertedUrl = data.youtube_music_url || data.spotify_url;
+                if (convertedUrl) {
+                    displayResult(convertedUrl);
+                } else {
+                    // Should be caught by API's 404, but as a fallback:
+                    displayError(data.detail || 'Conversion successful, but no URL returned.');
+                }
+            } else {
+                displayError(data.detail || `Error: ${response.statusText} (Status: ${response.status})`);
+            }
+        } catch (error) {
+            console.error('Request failed:', error);
+            displayError('An network error occurred. Please try again or check the console.');
+        } finally {
+            hideSpinner();
+        }
+    }
+
+    function copyToClipboard() {
+        const urlToCopy = resultUrlElement.href;
+        if (urlToCopy && urlToCopy !== '#') { // Ensure there's a valid URL
+            navigator.clipboard.writeText(urlToCopy)
+                .then(() => {
+                    copyFeedback.textContent = 'Copied to clipboard!';
+                    setTimeout(() => {
+                        copyFeedback.textContent = '';
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy:', err);
+                    copyFeedback.textContent = 'Failed to copy.';
+                     setTimeout(() => {
+                        copyFeedback.textContent = '';
+                    }, 2000);
+                });
+        }
+    }
 });

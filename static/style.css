@@ -1,150 +1,161 @@
-/* === Reset & Base === */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 body {
-  background-color: #121212;
-  color: #e0e0e0;
-  font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: #121212;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-/* === Container & Card === */
 .container {
-  text-align: center;
-  width: 100%;
-  max-width: 420px;
-  padding: 0 1rem;
+    background-color: #1e1e1e;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
 }
+
 h1 {
-  font-size: 1.9rem;
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.5px;
+    color: #ffffff;
+    margin-bottom: 10px;
+    font-size: 2em;
 }
 
-/* White-ish card background to lift off the dark page */
-.card {
-  background-color: #1e1e1e;
-  border-radius: 12px;
-  padding: 1.5rem 1rem 1.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  position: relative;
+.subtitle {
+    color: #a0a0a0;
+    margin-bottom: 30px;
+    font-size: 1em;
 }
 
-/* === Input & Button === */
-input[type="text"] {
-  width: 100%;
-  padding: 0.9rem 1rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 8px;
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  margin-bottom: 1rem;
-  transition: background-color 0.2s ease;
-}
-input[type="text"]::placeholder {
-  color: #888;
-}
-input[type="text"]:focus {
-  outline: none;
-  background-color: #333;
+.input-group {
+    display: flex;
+    margin-bottom: 25px;
+    gap: 10px;
 }
 
-button {
-  width: 100%;
-  padding: 0.9rem;
-  font-size: 1rem;
-  background-color: #bb86fc;
-  color: #121212;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-button:hover {
-  background-color: #9b66d4;
+#url-input {
+    flex-grow: 1;
+    padding: 15px;
+    font-size: 1em;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* === Spinner === */
+#url-input:focus {
+    border-color: #007bff; /* A neutral bright blue for focus */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+#convert-button {
+    padding: 15px 25px;
+    font-size: 1em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+}
+
+#convert-button:hover {
+    background-color: #0056b3;
+}
+
 .spinner {
-  border: 5px solid #2a2a2a;
-  border-top: 5px solid #bb86fc;
-  border-radius: 50%;
-  width:  thirty-five px;
-  height: thirty-five px;
-  animation: spin 1s linear infinite;
-  position: absolute;
-  top: calc(50% + 10px);
-  left: calc(50% - 17.5px);
-  display: none;
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: #007bff;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 30px auto;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-/* === Output (Result / Error) === */
-#output {
-  margin-top: 1.75rem;
+#result-container {
+    margin-top: 30px;
+    background-color: #2a2a2a;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: left;
 }
 
-.result-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.75rem;
-  word-break: break-all;
+#result-container p:first-child {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #a0a0a0;
+    font-size: 0.9em;
 }
 
-.result-container a {
-  color: #bb86fc;
-  text-decoration: none;
-  font-size: 0.975rem;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-.result-container a:hover {
-  color: #d2a1ff;
+.result-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #333333;
+    padding: 10px 15px;
+    border-radius: 6px;
 }
 
-/* Inline copy‐icon button */
-.copy-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #e0e0e0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  transition: color 0.2s ease;
-}
-.copy-icon:hover {
-  color: #bb86fc;
+#result-url {
+    color: #61dafb; /* A light teal/blue for links */
+    text-decoration: none;
+    word-break: break-all;
+    flex-grow: 1;
 }
 
-/* “Copied!” tooltip text */
-.tooltip {
-  font-size: 0.875rem;
-  color: #03dac5;
-  margin-left: 0.5rem;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.tooltip.visible {
-  opacity: 1;
+#result-url:hover {
+    text-decoration: underline;
 }
 
-.error {
-  color: #cf6679;
-  font-size: 0.95rem;
-  margin-top: 0.5rem;
+.copy-button {
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copy-button svg {
+    stroke: #a0a0a0;
+}
+
+.copy-button:hover svg {
+    stroke: #ffffff;
+}
+
+.copy-feedback {
+    font-size: 0.85em;
+    color: #28a745; /* Green for success feedback */
+    margin-top: 10px;
+    margin-bottom: 0;
+    height: 1.2em; /* Reserve space to prevent layout shift */
+}
+
+.error-message {
+    color: #dc3545; /* Red for errors */
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 25px;
+    word-break: break-word;
 }
