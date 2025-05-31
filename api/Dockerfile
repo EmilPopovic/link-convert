@@ -11,4 +11,3 @@ COPY . /app/
 EXPOSE 5555
 
 CMD ["python3", "/app/api/app/main.py"]
-

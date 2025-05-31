@@ -76,18 +76,20 @@ jobs:
             - name: Copy stack file to server
               uses: appleboy/scp-action@v0.1.5
               with:
-                host: ${{ secrets.SERVER_HOST }}
+                host: linkconvert.emilpopovic.me
                 username: deploy
                 key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+                port: 22
                 source: "docker-stack.yaml,envfile"
                 target: "/home/deploy/"
 
             - name: Deploy via SSH
               uses: appleboy/ssh-action@v0.1.7
               with:
-                host: ${{ secrets.SERVER_HOST }}
+                host: linkconvert.emilpopovic.me
                 username: deploy
                 key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+                port: 22
                 script: |
                   echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
                   docker stack deploy -c /home/deploy/docker-stack.yaml --with-registry-auth linkconvert
