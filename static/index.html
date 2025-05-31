@@ -4,22 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Music Link Converter</title>
-  <!-- Link to external CSS -->
   <link rel="stylesheet" href="static/style.css" />
 </head>
 <body>
   <div class="container">
     <h1>Music Link Converter</h1>
-    <input
-      type="text"
-      id="urlInput"
-      placeholder="Enter YouTube Music or Spotify track URL"
-    />
-    <button id="convertBtn">Convert</button>
+    <div class="card">
+      <input
+        type="text"
+        id="urlInput"
+        placeholder="Paste a Spotify or YouTube Music track URL"
+      />
+      <button id="convertBtn">Convert</button>
+      <div id="spinner" class="spinner"></div>
+    </div>
     <div id="output"></div>
   </div>
 
-  <!-- Link to external JS -->
   <script src="static/script.js"></script>
 </body>
 </html>
