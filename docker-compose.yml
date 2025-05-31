@@ -7,11 +7,13 @@ services:
     ports:
       - "5555:5555"
     volumes:
-      - ./secrets/spotify-token.txt:/run/secrets/spotify-token:ro
-      - ./secrets/youtube-api-key.txt:/run/secrets/youtube-api-key:ro
+      - ./secrets/spotify-client-id:/run/secrets/spotify-client-id:ro
+      - ./secrets/spotify-client-secret:/run/secrets/spotify-client-secret:ro
+      - ./secrets/youtube-api-key:/run/secrets/youtube-api-key:ro
     environment:
       - API_URL=http://localhost:5555
-      - SPOTIFY_TOKEN_FILE=/run/secrets/spotify-token
+      - SPOTIFY_CLIENT_ID_FILE=/run/secrets/spotify-client-id
+      - SPOTIFY_CLIENT_SECRET_FILE=/run/secrets/spotify-client-secret
       - YOUTUBE_API_KEY_FILE=/run/secrets/youtube-api-key
     depends_on:
       - redis

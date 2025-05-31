@@ -67,7 +67,8 @@ jobs:
                     fi
                     }
 
-                    create_secret "spotify-token" "${{ secrets.SPOTIFY_TOKEN }}"
+                    create_secret "spotify-client-id" "${{ secrets.SPOTIFY_CLIENT_ID }}"
+                    create_secret "spotify-client-secret" "${{ secrets.SPOTIFY_CLIENT_secret }}"
                     create_secret "youtube-api-key" "${{ secrets.YOUTUBE_API_KEY }}"
 
             - name: Docker Stack Deploy

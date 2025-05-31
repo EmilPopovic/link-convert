@@ -2,12 +2,47 @@ import requests
 import re
 from difflib import SequenceMatcher
 import os
+import base64
+import time
 
 from secret_manager import get_secret
 
 
-SPOTIFY_TOKEN = get_secret('SPOTIFY_TOKEN')
+SPOTIFY_CLIENT_ID = get_secret('SPOTIFY_CLIENT_ID')
+SPOTIFY_CLIENT_SECRET = get_secret('SPOTIFY_CLIENT_SECRET')
 YOUTUBE_API_KEY = get_secret('YOUTUBE_API_KEY')
+
+_spotify_token = None
+_spotify_token_expiry = 0
+
+
+def get_spotify_token():
+    global _spotify_token, _spotify_token_expiry
+
+    if _spotify_token and time.time() < _spotify_token_expiry:
+        return _spotify_token
+
+    print("Refreshing Spotify token...")
+
+    token_url = "https://accounts.spotify.com/api/token"
+    auth_header = base64.b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}".encode()).decode()
+    headers = {
+        "Authorization": f"Basic {auth_header}",
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    data = {
+        "grant_type": "client_credentials"
+    }
+
+    response = requests.post(token_url, headers=headers, data=data)
+    if response.status_code != 200:
+        raise Exception(f"Failed to get Spotify token: {response.text}")
+
+    token_info = response.json()
+    _spotify_token = token_info["access_token"]
+    _spotify_token_expiry = time.time() + token_info["expires_in"] - 30  # renew 30 seconds early
+
+    return _spotify_token
 
 
 def extract_spotify_track_id(url: str) -> str | None:
@@ -21,8 +56,9 @@ def extract_youtube_video_id(url: str) -> str | None:
 
 
 def get_spotify_track_info(track_id: str) -> dict:
+    token = get_spotify_token()
     headers = {
-        'Authorization': f'Bearer {SPOTIFY_TOKEN}'
+        'Authorization': f'Bearer {token}'
     }
     response = requests.get(
         f'https://api.spotify.com/v1/tracks/{track_id}',
@@ -82,8 +118,9 @@ def get_youtube_track_info(video_id: str) -> dict | None:
 
 
 def search_spotify_track(title, artist) -> tuple[str | None, float]:
+    token = get_spotify_token()
     headers = {
-        "Authorization": f"Bearer {SPOTIFY_TOKEN}"
+        "Authorization": f"Bearer {token}"
     }
     query = f"{title} {artist}"
     params = {
