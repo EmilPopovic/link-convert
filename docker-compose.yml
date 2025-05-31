@@ -9,7 +9,7 @@ services:
     volumes:
       - ./secrets/spotify-client-id:/run/secrets/spotify-client-id:ro
       - ./secrets/spotify-client-secret:/run/secrets/spotify-client-secret:ro
-      - ./secrets/youtube-api-key:/run/secrets/youtube-api-key:ro
+      - ./secrets/youtube-api-key.txt:/run/secrets/youtube-api-key:ro
     environment:
       - API_URL=http://localhost:5555
       - SPOTIFY_CLIENT_ID_FILE=/run/secrets/spotify-client-id
