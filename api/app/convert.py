@@ -1,3 +1,4 @@
+import logging
 import requests
 import re
 from difflib import SequenceMatcher
@@ -8,9 +9,28 @@ import time
 from secret_manager import get_secret
 
 
-SPOTIFY_CLIENT_ID = get_secret('SPOTIFY_CLIENT_ID')
-SPOTIFY_CLIENT_SECRET = get_secret('SPOTIFY_CLIENT_SECRET')
-YOUTUBE_API_KEY = get_secret('YOUTUBE_API_KEY')
+LOG_FORMAT = (
+    "%(asctime)s | %(levelname)-8s | %(name)s | %(filename)s:%(lineno)d | "
+    "%(funcName)s() | %(threadName)s | %(message)s"
+)
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format=LOG_FORMAT,
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+logger = logging.getLogger(__name__)
+
+SPOTIFY_CLIENT_ID = get_secret('SPOTIFY_CLIENT_ID_FILE')
+SPOTIFY_CLIENT_SECRET = get_secret('SPOTIFY_CLIENT_SECRET_FILE')
+YOUTUBE_API_KEY = get_secret('YOUTUBE_API_KEY_FILE')
+
+logger.info("Loaded configuration: "
+           f"SPOTIFY_CLIENT_ID={SPOTIFY_CLIENT_ID is not None}, "
+           f"SPOTIFY_CLIENT_SECRET={SPOTIFY_CLIENT_SECRET is not None}, "
+           f'YOUTUBE_API_KEY={YOUTUBE_API_KEY is not None}')
+
 
 _spotify_token = None
 _spotify_token_expiry = 0
@@ -22,7 +42,7 @@ def get_spotify_token():
     if _spotify_token and time.time() < _spotify_token_expiry:
         return _spotify_token
 
-    print("Refreshing Spotify token...")
+    logger.info("Refreshing Spotify token...")
 
     token_url = "https://accounts.spotify.com/api/token"
     auth_header = base64.b64encode(f"{SPOTIFY_CLIENT_ID}:{SPOTIFY_CLIENT_SECRET}".encode()).decode()
