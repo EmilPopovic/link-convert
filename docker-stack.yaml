@@ -1,0 +1,26 @@
+services:
+  api:
+    image: emilpopovic/linkconvert:${GIT_COMMIT_HASH:-latest}
+    secrets:
+      - spotify-token
+      - youtube-api-key
+    environment:
+      - API_URL=https://linkconvert.emilpopovic.me
+      - SPOTIFY_TOKEN_FILE=/run/secrets/spotify-token
+      - YOUTUBE_API_KEY_FILE=/run/secrets/youtube-api-key
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+secrets:
+  spotify-token:
+    external: true
+  youtube-api-key:
+    external: true

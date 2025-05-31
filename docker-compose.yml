@@ -1,0 +1,25 @@
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./secrets/spotify-token.txt:/run/secrets/spotify-token:ro
+      - ./secrets/youtube-api-key.txt:/run/secrets/youtube-api-key:ro
+    environment:
+      - API_URL=http://localhost:5555
+      - SPOTIFY_TOKEN_FILE=/run/secrets/spotify-token
+      - YOUTUBE_API_KEY_FILE=/run/secrets/youtube-api-key
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
