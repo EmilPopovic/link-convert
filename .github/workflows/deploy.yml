@@ -73,12 +73,14 @@ jobs:
                     create_secret "spotify-client-secret" "${{ secrets.SPOTIFY_CLIENT_SECRET }}"
                     create_secret "youtube-api-key" "${{ secrets.YOUTUBE_API_KEY }}"
 
-            - name: Docker Stack Deploy
-              uses: cssnr/stack-deploy-action@v1
+            - name: Docker Stack via SSH
+              uses: appleboy/ssh-action@v0.1.7
+              timeout-minutes: 3
               with:
-                name: linkconvert
-                file: docker-stack.yaml
                 host: linkconvert.emilpopovic.me
-                user: deploy
-                ssh_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-                env_file: ./envfile
+                username: deploy
+                key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+                port: 22
+                script: |
+                  docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_PASSWORD }}"
+                  docker stack deploy -c /home/deploy/docker-stack.yaml --with-registry-auth linkconvert
