@@ -10,7 +10,5 @@ COPY . /app/
 
 EXPOSE 5555
 
-ENV PYTHONPATH="/app:${PYTHONPATH}"
-
 CMD ["python3", "/app/api/app/main.py"]
 
