@@ -1,11 +1,6 @@
 services:
   api:
     image: emilpopovic/linkconvert-api:${GIT_COMMIT_HASH:-latest}
-    ports:
-      - target: 5555
-        published: 5555
-        protocol: tcp
-        mode: host
     secrets:
       - spotify-client-id
       - spotify-client-secret
