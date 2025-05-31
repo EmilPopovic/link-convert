@@ -52,6 +52,7 @@ jobs:
                 host: ${{ secrets.SERVER_HOST }}
                 username: deploy
                 key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+                port: 22
                 script: |
                     #!/bin/bash
                     set -e
