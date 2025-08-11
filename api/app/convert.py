@@ -21,9 +21,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-SPOTIFY_CLIENT_ID = get_secret('SPOTIFY_CLIENT_ID_FILE')
-SPOTIFY_CLIENT_SECRET = get_secret('SPOTIFY_CLIENT_SECRET_FILE')
-YOUTUBE_API_KEY = get_secret('YOUTUBE_API_KEY_FILE')
+SPOTIFY_CLIENT_ID = get_secret('SPOTIFY_CLIENT_ID')
+SPOTIFY_CLIENT_SECRET = get_secret('SPOTIFY_CLIENT_SECRET')
+YOUTUBE_API_KEY = get_secret('YOUTUBE_API_KEY')
 
 logger.info('Loaded configuration: '
            f'SPOTIFY_CLIENT_ID={SPOTIFY_CLIENT_ID is not None}, '

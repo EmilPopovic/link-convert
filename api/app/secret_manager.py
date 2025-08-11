@@ -10,4 +10,4 @@ def get_secret(env_var_name: str, default: str | None = None) -> str | None:
         except Exception as _:
             return default
     
-    return value if value is not None else default
+    return value or default or os.getenv(env_var_name)

@@ -1,27 +1,33 @@
 
 services:
   api:
+    container_name: linkconvert-api
     build:
       context: .
       dockerfile: api/Dockerfile
     ports:
       - "5555:5555"
-    volumes:
-      - ./.secrets/spotify-client-id:/run/secrets/spotify-client-id:ro
-      - ./.secrets/spotify-client-secret:/run/secrets/spotify-client-secret:ro
-      - ./.secrets/youtube-api-key:/run/secrets/youtube-api-key:ro
-    environment:
-      - API_URL=http://localhost:5555
-      - SPOTIFY_CLIENT_ID_FILE=/run/secrets/spotify-client-id
-      - SPOTIFY_CLIENT_SECRET_FILE=/run/secrets/spotify-client-secret
-      - YOUTUBE_API_KEY_FILE=/run/secrets/youtube-api-key
+    env_file:
+      - .env
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
+    networks:
+      - linkconvert
+      - proxy-network
 
   redis:
+    container_name: linkconvert-redis
     image: redis:alpine
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
+      interval: 10s
       timeout: 10s
       retries: 5
+    networks:
+      - linkconvert
+
+networks:
+  linkconvert:
+  proxy-network:
+    external: true

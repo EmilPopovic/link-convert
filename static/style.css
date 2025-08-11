@@ -39,6 +39,17 @@ h1 {
     gap: 10px;
 }
 
+@media (max-width: 600px) {
+    .input-group {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    #convert-button {
+        width: 100%;
+    }
+}
+
 #url-input {
     flex-grow: 1;
     padding: 15px;
@@ -49,6 +60,7 @@ h1 {
     border-radius: 8px;
     outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: inherit;
 }
 
 #url-input:focus {
@@ -66,6 +78,7 @@ h1 {
     cursor: pointer;
     transition: background-color 0.3s ease;
     font-weight: 500;
+    font-family: inherit;
 }
 
 #convert-button:hover {
