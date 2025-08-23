@@ -1,0 +1,20 @@
+services:
+  api:
+    container_name: linkconvert-api
+    image: emilpopovic/linkconvert-api
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    container_name: linkconvert-redis
+    image: redis:alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
